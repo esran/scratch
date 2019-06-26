@@ -1,0 +1,110 @@
+Short test case #1 (size:8)
+Dead_Bowie Nyssa_Raatko
+Animora Lafety_Le_Fei
+Animora Mothergod
+Animora Nyssa_Raatko
+Dead_Bowie Genevieve_Savidge
+Dead_Bowie Lafety_Le_Fei
+Animora Genevieve_Savidge
+Dead_Bowie Mothergod
+
+Short test case #2 (size:10)
+Mephista New_Wave
+Mephista Ursa
+Zaladane Mai_Shen
+Mephista Mai_Shen
+White_Rabbit Hypnota
+White_Rabbit New_Wave
+Ursa Scandal
+Zaladane New_Wave
+Ursa Hypnota
+Zaladane Scandal
+
+Short test case #3 (size:3)
+Spider_Girl Blue_Snowman
+Blue_Snowman Roulette
+Roulette Spider_Girl
+
+Short test case#4 (size:10)
+Magenta Golden_Glider
+Tala Mothergod
+The_Lightning Shiv
+The_Lightning Prank
+Magenta Shiv
+Tala Prank
+Trinity Golden_Glider
+Magenta Prank
+The_Lightning Mothergod
+Trinity Mothergod
+
+Short test case #5 (size:10)
+The_Lightning Star_Sapphire
+Unicron Queen_Of_Fables
+Unicron Dead_Bowie
+Lady_Quark Fury_Leika
+Lady_Quark Star_Sapphire
+The_Lightning Dead_Bowie
+Asbestos_Lady Queen_Of_Fables
+Unicron Lady_Quark
+Asbestos_Lady Star_Sapphire
+The_Lightning Fury_Leika
+
+Short test case #6 (size:10)
+Zaladane Scandal
+Lashina King_Ghidorah
+Doctor_Cyber Tala
+Lashina Evinlea
+Dr_Evil Tala
+Zaladane King_Ghidorah
+Doctor_Cyber Evinlea
+Doctor_Cyber King_Ghidorah
+Dr_Evil Scandal
+Lashina Scandal
+
+Short test case #7 (size:10)
+Bombshell Rampage
+Deuce Ursa
+Bombshell Ursa
+Lady_Octopus Rampage
+Doctor_Cyber Black_Mamba
+Deuce Madame_Rouge
+Doctor_Cyber Rampage
+Lady_Octopus Madame_Rouge
+Doctor_Cyber Madame_Rouge
+Lady_Octopus Black_Mamba
+
+Short test case #8 (size:10)
+Cyborgirl Fury_Leika
+Asbestos_Lady Margaret_Love
+Amazing_Grace Fury_Leika
+Cyborgirl Hypnota
+Duela_Dent Amazing_Grace
+Duela_Dent Hypnota
+Amazing_Grace Margaret_Love
+Duela_Dent Mephista
+Duela_Dent Fury_Leika
+Asbestos_Lady Mephista
+
+Short test case #9 (size:10)
+Jason_Kreis Poundcakes
+Margaret_Love Star_Sapphire
+Snapdragon Ingra
+Snapdragon Poundcakes
+Snapdragon Star_Sapphire
+Dead_Bowie Star_Sapphire
+Jason_Kreis Ingra
+Dead_Bowie Rampage
+Dead_Bowie Poundcakes
+Margaret_Love Rampage
+
+Short test case #10 (size:10)
+Lazara Southpaw
+Dansen_Macabre Jewelee
+Lazara Amazing_Grace
+Osira Amazing_Grace
+Osira Coachwhip
+Coachwhip Princess_Python
+Dansen_Macabre Princess_Python
+Coachwhip Southpaw
+Osira Princess_Python
+Osira Jewelee

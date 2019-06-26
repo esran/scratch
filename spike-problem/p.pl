@@ -5,103 +5,130 @@ use warnings;
 
 use Data::Dumper;
 
-my @candidates = ();
-my $current_ok = 1;
-my $test_num = -1;
+sub contains
+{
+    my ($value, @array) = @_;
 
-while(<>) {
-    if ($_ =~ /Test case #(\d+)/) {
-        if ($current_ok == 1 and $test_num > 0) {
-            print "Test $test_num: OK\n";
-        }
-
-        $test_num = $1;
-        $current_ok = 1;
-        @candidates = ();
-
-        print "Test $test_num...\n";
-
-        next;
+    for my $val (@array) {
+        return 1 if $val eq $value;
     }
 
-    next if $current_ok != 1;
-
-    ($a, $b) = split (" ", $_);
-
-    print "  - values: $a, $b\n";
-    # print '  - current candidates: ' . "\n" . Dumper(@candidates);
-
-    # no candidates so simply create a candidate with each value
-    if (scalar @candidates == 0) {
-        my $new_cand = { s1 => undef, s2 => undef };
-        push @{$new_cand->{s1}}, $a;
-        push @{$new_cand->{s2}}, $b;
-        push @candidates, $new_cand;
-        next;
-    }
-
-    my $i = 0;
-    my @new_candidates = ();
-    for my $cand (@candidates) {
-        my ($s1, $s2) = (0, 0);
-
-        $s1 = 1 if $a ~~ @{$cand->{s1}};
-        $s1 = 2 if $a ~~ @{$cand->{s2}};
-        $s2 = 1 if $b ~~ @{$cand->{s1}};
-        $s2 = 2 if $b ~~ @{$cand->{s2}};
-
-        print "  - candidate[$i]: $s1, $s2\n";
-
-        # check for possible outcomes
-        if ($s1 > 0 and $s1 == $s2) {
-            # remove this candidate
-            print "  - removing current candidate\n";
-            splice @candidates, $i, 1;
-            # check for 0 candidates and mark as failed at that point
-            if (scalar @candidates == 0) {
-                print "Test $test_num: Fail\n";
-                $current_ok = 0;
-                last;
-            }
-        } elsif ($s1 > 0 and $s2 == 0) {
-            # a is in one of the sets but b isn't
-            print "  - matched $a only\n";
-            if ($s1 == 1) {
-                push @{$cand->{s2}}, $b;
-            } else {
-                push @{$cand->{s1}}, $b;
-            }
-        } elsif ($s2 > 0 and $s1 == 0) {
-            # b is in one of the sets but a isn't
-            print "  - matched $b only\n";
-            if ($s2 == 1) {
-                push @{$cand->{s2}}, $a;
-            } else {
-                push @{$cand->{s1}}, $a;
-            }
-        } else {
-            # neither is already matched
-            print "  - no match";
-            # add to current candidate
-            push @{$cand->{s1}}, $a;
-            push @{$cand->{s2}}, $b;
-            # add a new candidate with a/b reversed into the sets
-            my $new_cand = { s1 => undef, s2 => undef };
-            push @{$new_cand->{s1}}, @{$new_cand->{s1}};
-            push @{$new_cand->{s2}}, @{$new_cand->{s2}};
-            push @{$new_cand->{s2}}, $a;
-            push @{$new_cand->{s1}}, $b;
-            push @new_candidates, $new_cand;
-        }
-
-        $i++;
-    }
-
-    # add new candidates
-    push @candidates, @new_candidates;
+    return 0;
 }
 
-# pick up if last test was ok
-if ($current_ok == 1 and $test_num > 0) {
-	print "Test $test_num: OK\n";
+sub do_test
+{
+    my ($test, $pairs, $start, $orig_set1, $orig_set2) = @_;
+    my @set1 = ();
+    my @set2 = ();
+
+    if (defined $start) {
+        @set1 = @$orig_set1;
+        @set2 = @$orig_set2;
+    } else {
+        $start = 0;
+    }
+
+    for my $i ($start .. scalar @$pairs - 1) {
+        my $pair = $pairs->[$i];
+        my $a = $pair->{a};
+        my $b = $pair->{b};
+
+        # special case for first pairs
+        if (@set1 == 0) {
+            push @set1, $a;
+            push @set2, $b;
+        }
+
+        # check if value a is in one of the sets
+        if (contains($a, @set1)) {
+            if (contains($b, @set1)) {
+                # both of this pair are already in set1
+                return "fail";
+            } elsif (contains($b, @set2)) {
+                # this pair is already safely in sets
+                next;
+            } else {
+                # only one of this pair is in a set
+                push @set2, $b;
+                next;
+            }
+        } elsif (contains($a, @set2)) {
+            if (contains($b, @set2)) {
+                # both of this pair are already in set2
+                return "fail";
+            } elsif (contains($b, @set1)) {
+                # this pair is already safely in sets
+                next;
+            } else {
+                # only on of this pair is in a set
+                push @set1, $b;
+                next;
+            }
+        }
+
+        # a is in neither set, so check b
+        if (contains($b, @set1)) {
+            push @set2, $a;
+            next;
+        }
+
+        if (contains($b, @set2)) {
+            push @set1, $a;
+            next;
+
+        }
+
+        # neither a or b are in either set so we have two options
+        # here.
+
+        # try left/right first
+        my @new_set1 = @set1;
+        my @new_set2 = @set2;
+        push @new_set1, $a;
+        push @new_set2, $b;
+
+        last if do_test($test, $pairs, $i+1, \@new_set1, \@new_set2) eq "ok";
+
+        # now try right/left
+        @new_set1 = @set1;
+        @new_set2 = @set2;
+        push @new_set1, $b;
+        push @new_set2, $a;
+
+        last if do_test($test, $pairs, $i+1, \@new_set1, \@new_set2) eq "ok";
+
+        # neither solution worked so fail
+        return "fail";
+    }
+
+    return "ok";
+}
+
+my $test_num = -1;
+my @pairs = ();
+
+# process input
+while(<>) {
+    # identify test as it will have #N
+    if ($_ =~ /#(\d+)/) {
+        $test_num = $1;
+        @pairs = ();
+        next;
+    }
+
+    # a blank line indicates end of test data
+    if ($_ =~ /^$/) {
+        print "Test $test_num: " . do_test($test_num, \@pairs) . "\n";
+        $test_num = -1;
+    }
+
+    # each test line is two words with space divider
+    my ($a, $b) = split (" ", $_);
+    push @pairs, { a => $a, b => $b };
+}
+
+# pick up last test
+if ($test_num > 0) {
+    print "Test $test_num: " . do_test($test_num, \@pairs) . "\n";
 }
